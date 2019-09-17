@@ -9,7 +9,6 @@ class Server(Process):
         super().__init__()
         self.port = port
 
-    #@staticmethod
     def connect(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.bind(('127.0.0.1', self.port))
@@ -43,7 +42,6 @@ class Server(Process):
                             print('Error', err)
                             break
 
-    #@staticmethod
     def work(self):
         with ThreadPoolExecutor(max_workers=5) as pool:
             pool.submit(Server(self.port).connect())

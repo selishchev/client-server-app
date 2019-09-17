@@ -32,9 +32,10 @@ class Client:
                             print("Connection has been aborted")
                             break
                 except socket.error as err:
-                    print('Error')
+                    print('Error', err)
         except AttributeError:
             pass
 
 
-Client().send()
+if __name__ == '__main__':
+    Client().send()
