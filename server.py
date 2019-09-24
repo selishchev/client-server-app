@@ -8,20 +8,27 @@ class Server(Process):
     def __init__(self, port, n=3):
         super().__init__()
         self.port = port
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.bind(('127.0.0.1', self.port))
+        self.sock.listen(socket.SOMAXCONN)
         self.n = n
 
     def processes(self):
+        processes = []
         for i in range(self.n):
-            Process(target=self.connect(), args=())
+            pr = Process(target=self.connect(), args=())
+            processes.append(pr)
+            pr.start()
+
+        for i in range(self.n):
+            processes[i].join()
 
     def connect(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.bind(('127.0.0.1', self.port))
-            sock.listen(socket.SOMAXCONN)
-            while True:
-                conn, addr = sock.accept()
-                conn.settimeout(15)
-                Thread(target=self.worker(conn))
+        conn, addr = self.sock.accept()
+        conn.settimeout(15)
+        th = Thread(target=self.worker(conn))
+        th.start()
+        th.join()
 
     def worker(self, conn):
         with conn:

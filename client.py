@@ -2,9 +2,9 @@ import socket
 
 
 class Client:
-    def __init__(self):
+    def __init__(self, port):
         try:
-            self.sock = socket.create_connection(('127.0.0.1', 10001))
+            self.sock = socket.create_connection(('127.0.0.1', port))
         except ConnectionRefusedError:
             print("Server doesn't work")
 
@@ -38,4 +38,4 @@ class Client:
 
 
 if __name__ == '__main__':
-    Client().send()
+    Client(10001).send()
